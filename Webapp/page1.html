@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Message List</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body onload="init()">
+  <h1>Input your message here</h1>
+  <div class="input-field">
+    <form>
+      <label class="input-nama" for="name">Name</label>
+      <input class="input-nama" type="text" id="name"><br>
+      <label class="input-message" for="message">Message</label>
+      <input class="input-message" type="text" id="message"><br>
+      <button class="submit" type="button" onclick="addUser()">Add Message</button>
+    </form>
+  </div>
+
+  <ul id="user-list">
+
+  </ul>
+
+  <script>
+    let users = [];
+
+    function init() {
+      // Retrieve user data from local storage
+      const storedUsers = localStorage.getItem("users");
+      if (storedUsers) {
+        users = JSON.parse(storedUsers);
+      }
+
+      // Display user list in HTML
+      displayUsers();
+    }
+
+    function displayUsers() {
+      const userList = document.getElementById("user-list");
+      userList.innerHTML = "";
+
+      const name = document.getElementById("name").value;
+      const message = document.getElementById("message").value;
+
+      const newUser = {
+        "name": name,
+        "message": message,
+        "dateAdded": new Date()
+      };
+
+      users.forEach(user => {
+        const listItem = document.createElement("li");
+        const dateAdded = new Date(user.dateAdded);
+        const formattedDate = dateAdded.toLocaleString();
+        listItem.innerHTML = `Name: ${user.name}, Message: ${user.message}, Date Added: ${formattedDate}`;
+        userList.appendChild(listItem);
+      });
+    }
+
+    function addUser() {
+      const name = document.getElementById("name").value;
+      const message = document.getElementById("message").value;
+
+      const newUser = {
+        "name": name,
+        "message": message,
+        "dateAdded": new Date()
+      };
+      users.push(newUser);
+
+      // Store user data in local storage
+      localStorage.setItem("users", JSON.stringify(users));
+
+      // Clear form input fields
+      document.getElementById("name").value = "";
+      document.getElementById("message").value = "";
+
+      // Update user list in HTML
+      displayUsers();
+    }
+
+  </script>
+
+</body>
+</html>
+
